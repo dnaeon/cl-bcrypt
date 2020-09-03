@@ -91,3 +91,13 @@
 (defun generate-salt ()
   "Generates a random 16 bytes size salt"
   (ironclad:random-data +raw-salt-size+))
+
+(defun b64-encode (octets)
+  "base64 encodes the given octets using our alphabet"
+  (let ((binascii::*base64-encode-table* *b64-encode-table*))
+    (binascii:encode-base64 octets)))
+
+(defun b64-decode (octets)
+  "base64 decodes the given octets using our alphabet"
+  (let ((binascii::*base64-decode-table* *b64-decode-table*))
+    (binascii:decode-base64 octets)))
