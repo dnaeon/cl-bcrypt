@@ -65,6 +65,14 @@
   60
   "Number of characters that make up an encoded bcrypt password")
 
+(define-condition bcrypt-error ()
+  ((description
+    :initarg :description
+    :reader bcrypt-error-description))
+  (:documentation "Bcrypt error condition")
+  (:report (lambda (condition stream)
+             (format stream "~a" (bcrypt-error-description condition)))))
+
 (defclass password ()
   ((algorithm-identifier
     :initarg :algorithm-identifier

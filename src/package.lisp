@@ -36,5 +36,7 @@
    :algorithm-identifier
    :cost-factor
    :salt
-   :password-hash))
+   :password-hash
+   :bcrypt-error
+   :bcrypt-error-condition))
 (in-package :cl-bcrypt)
