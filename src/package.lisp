@@ -28,5 +28,7 @@
   (:use :cl)
   (:nicknames :bcrypt)
   (:import-from :binascii)
-  (:import-from :ironclad))
+  (:import-from :ironclad)
+  (:export
+   :generate-salt))
 (in-package :cl-bcrypt)

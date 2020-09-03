@@ -64,3 +64,7 @@
 (defconstant +encoded-bcrypt-password-size+
   60
   "Number of characters that make up an encoded bcrypt password")
+
+(defun generate-salt ()
+  "Generates a random 16 bytes size salt"
+  (ironclad:random-data +raw-salt-size+))
