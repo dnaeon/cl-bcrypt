@@ -30,6 +30,7 @@
   (:import-from :binascii)
   (:import-from :ironclad)
   (:export
+   :*default-cost-factor*
    :generate-salt
    :password
    :algorithm-identifier
