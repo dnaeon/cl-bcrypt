@@ -15,8 +15,8 @@
   :homepage "https://github.com/dnaeon/cl-bcrypt"
   :bug-tracker "https://github.com/dnaeon/cl-bcrypt"
   :source-control "https://github.com/dnaeon/cl-bcrypt"
-  :depends-on (:ironclad
-               :binascii)
+  :depends-on (:binascii
+               :ironclad)
   :components ((:module "core"
                 :pathname #P"src/"
                 :components ((:file "package")

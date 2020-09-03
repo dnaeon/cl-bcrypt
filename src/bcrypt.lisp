@@ -23,10 +23,44 @@
 ;; (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 ;; THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-(in-package :cl-user)
-(defpackage :cl-bcrypt
-  (:use :cl)
-  (:nicknames :bcrypt)
-  (:import-from :binascii)
-  (:import-from :ironclad))
 (in-package :cl-bcrypt)
+
+(defparameter *alphabet*
+  "./ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+  "Alphabet used for base64 encoding and decoding of bcrypt password hashes")
+
+(defparameter *b64-encode-table*
+  (coerce *alphabet* 'simple-base-string)
+  "Table used for base64 encoding of a password hash")
+
+(defparameter *b64-decode-table*
+  (binascii::make-decode-table *alphabet*)
+  "Table used for base64 decoding of a password hash")
+
+(defparameter *supported-algorithm-identifiers*
+  '("2a" "2b")
+  "Supported algorithm identifiers")
+
+(defparameter *default-cost-factor*
+  16
+  "The default cost factor")
+
+(defconstant +raw-hash-size+
+  24
+  "Number of bytes in the raw password hash")
+
+(defconstant +encoded-hash-size+
+  31
+  "Number of characters of the encoded password hash")
+
+(defconstant +raw-salt-size+
+  16
+  "Number of bytes in the raw salt")
+
+(defconstant +encoded-salt-size+
+  22
+  "Number of characters that represent an encoded salt")
+
+(defconstant +encoded-bcrypt-password-size+
+  60
+  "Number of characters that make up an encoded bcrypt password")
