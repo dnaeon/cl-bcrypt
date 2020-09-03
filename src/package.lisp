@@ -30,5 +30,10 @@
   (:import-from :binascii)
   (:import-from :ironclad)
   (:export
-   :generate-salt))
+   :generate-salt
+   :password
+   :algorithm-identifier
+   :cost-factor
+   :salt
+   :password-hash))
 (in-package :cl-bcrypt)

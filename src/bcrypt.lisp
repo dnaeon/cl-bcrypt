@@ -65,6 +65,29 @@
   60
   "Number of characters that make up an encoded bcrypt password")
 
+(defclass password ()
+  ((algorithm-identifier
+    :initarg :algorithm-identifier
+    :initform (error "Must specify hash algorithm identifier")
+    :reader algorithm-identifier
+    :documentation "The hash algorithm identifier")
+   (cost-factor
+    :initarg :cost-factor
+    :initform (error "Must specify cost factor")
+    :reader cost-factor
+    :documentation "The password cost factor")
+   (salt
+    :initarg :salt
+    :initform (error "Must specify password salt")
+    :reader salt
+    :documentation "16 bytes size salt")
+   (password-hash
+    :initarg :password-hash
+    :initform (error "Must specify password hash")
+    :reader password-hash
+    :documentation "The hashed password"))
+  (:documentation "Class which represents a bcrypt password"))
+
 (defun generate-salt ()
   "Generates a random 16 bytes size salt"
   (ironclad:random-data +raw-salt-size+))
