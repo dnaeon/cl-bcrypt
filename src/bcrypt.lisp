@@ -49,6 +49,10 @@
   24
   "Number of bytes in the raw password hash")
 
+(defconstant +raw-hash-bytes-to-encode+
+  23
+  "Number of bytes from the raw hash to be encoded")
+
 (defconstant +encoded-hash-size+
   31
   "Number of characters of the encoded password hash")
@@ -153,7 +157,7 @@ Supported IDENTIFIER values are 2a and 2b."
          (salt (salt password))
          (salt-encoded (b64-encode salt))
          (hash (password-hash password))
-         (hash-encoded (b64-encode (subseq hash 0 23))))
+         (hash-encoded (b64-encode (subseq hash 0 +raw-hash-bytes-to-encode+))))
     ;; In order to be compatible with other bcrypt implementations the
     ;; raw hash that gets encoded is truncated to the 23rd byte,
     ;; before the actual encoding.  The resulting hash is 32
@@ -161,6 +165,6 @@ Supported IDENTIFIER values are 2a and 2b."
     ;; character. The salt is 16 bytes long, which when encoded is 24
     ;; characters long, which is also truncated to the 22nd character.
     (write-string (format nil "$~a$~2,'0d$" identifier cost) stream)
-    (write-string (subseq salt-encoded 0 22) stream)
-    (write-string (subseq hash-encoded 0 31) stream)
+    (write-string (subseq salt-encoded 0 +encoded-salt-size+) stream)
+    (write-string (subseq hash-encoded 0 +encoded-hash-size+) stream)
     (get-output-stream-string stream)))
