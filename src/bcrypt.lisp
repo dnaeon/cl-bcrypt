@@ -144,3 +144,23 @@ Supported IDENTIFIER values are 2a and 2b."
                    :cost-factor cost
                    :salt salt
                    :password-hash key)))
+
+(defun encode (password)
+  "Encodes the given PASSWORD instance into its text representation"
+  (let* ((stream (make-string-output-stream))
+         (identifier (algorithm-identifier password))
+         (cost (cost-factor password))
+         (salt (salt password))
+         (salt-encoded (b64-encode salt))
+         (hash (password-hash password))
+         (hash-encoded (b64-encode (subseq hash 0 23))))
+    ;; In order to be compatible with other bcrypt implementations the
+    ;; raw hash that gets encoded is truncated to the 23rd byte,
+    ;; before the actual encoding.  The resulting hash is 32
+    ;; characters long and needs to be truncated to the 31st
+    ;; character. The salt is 16 bytes long, which when encoded is 24
+    ;; characters long, which is also truncated to the 22nd character.
+    (write-string (format nil "$~a$~2,'0d$" identifier cost) stream)
+    (write-string (subseq salt-encoded 0 22) stream)
+    (write-string (subseq hash-encoded 0 31) stream)
+    (get-output-stream-string stream)))

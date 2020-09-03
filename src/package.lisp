@@ -39,5 +39,8 @@
    :password-hash
    :bcrypt-error
    :bcrypt-error-condition
-   :make-password))
+   :make-password
+   :b64-encode
+   :b64-decode
+   :encode))
 (in-package :cl-bcrypt)
