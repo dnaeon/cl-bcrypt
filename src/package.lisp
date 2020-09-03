@@ -38,5 +38,6 @@
    :salt
    :password-hash
    :bcrypt-error
-   :bcrypt-error-condition))
+   :bcrypt-error-condition
+   :make-password))
 (in-package :cl-bcrypt)

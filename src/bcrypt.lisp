@@ -65,6 +65,10 @@
   60
   "Number of characters that make up an encoded bcrypt password")
 
+(defconstant +max-plain-text-password-size+
+  72
+  "Maximum number of characters of a plain-text password")
+
 (define-condition bcrypt-error ()
   ((description
     :initarg :description
@@ -109,3 +113,34 @@
   "base64 decodes the given octets using our alphabet"
   (let ((binascii::*base64-decode-table* *b64-decode-table*))
     (binascii:decode-base64 octets)))
+
+(defun make-password (password &key
+                                 (salt (generate-salt))
+                                 (cost *default-cost-factor*)
+                                 (identifier "2b"))
+  "Creates a new bcrypt password instance.
+The PASSWORD should be no more than 72 characters long.
+The COST should be a number between 4 and 31. The SALT is a random 16
+bytes sequence, which will be generated, unless explicitely provided.
+Supported IDENTIFIER values are 2a and 2b."
+  (declare (type (simple-array (unsigned-byte 8) (*)) salt)
+           (type fixnum cost)
+           (type string password identifier))
+  (unless (<= (length password) +max-plain-text-password-size+)
+    (error 'bcrypt-error :description "Password size is more than 72 characters"))
+  (unless (= (length salt) +raw-salt-size+)
+    (error 'bcrypt-error :description "Salt should be exactly 16 bytes"))
+  (unless (<= 4 cost 31)
+    (error 'bcrypt-error :description "Cost factor should be between 4 and 31"))
+  (unless (member identifier *supported-algorithm-identifiers*
+                  :test #'equal)
+    (error 'bcrypt-error :description "Algorithm identifier is not supported"))
+  (let* ((passphrase (ironclad:ascii-string-to-byte-array password))
+         (iterations (expt 2 cost))
+         (kdf (ironclad:make-kdf :bcrypt))
+         (key (ironclad:derive-key kdf passphrase salt iterations +raw-hash-size+)))
+    (make-instance 'password
+                   :algorithm-identifier identifier
+                   :cost-factor cost
+                   :salt salt
+                   :password-hash key)))
