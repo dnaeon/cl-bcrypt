@@ -46,5 +46,6 @@
    :encode
    :parse-hash
    :parse-hash-or-lose
-   :decode))
+   :decode
+   :password=))
 (in-package :cl-bcrypt)

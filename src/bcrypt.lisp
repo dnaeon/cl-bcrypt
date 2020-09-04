@@ -202,3 +202,14 @@ Supported IDENTIFIER values are 2a and 2b."
                    :cost-factor cost-factor
                    :salt salt
                    :password-hash password-hash)))
+
+(defun password= (password-string hash-string)
+  "Test whether the PASSWORD-STRING is equal to HASH-STRING when encoded"
+  (declare (type string password-string hash-string))
+  (let* ((decoded-password (decode hash-string))
+         (new-password (make-password password-string
+                                      :salt (salt decoded-password)
+                                      :cost (cost-factor decoded-password)
+                                      :identifier (algorithm-identifier decoded-password)))
+         (encoded-hash (encode new-password)))
+    (string= encoded-hash hash-string)))
