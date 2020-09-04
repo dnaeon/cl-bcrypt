@@ -29,6 +29,7 @@
   (:nicknames :bcrypt)
   (:import-from :binascii)
   (:import-from :ironclad)
+  (:import-from :cl-ppcre)
   (:export
    :*default-cost-factor*
    :generate-salt
@@ -42,5 +43,7 @@
    :make-password
    :b64-encode
    :b64-decode
-   :encode))
+   :encode
+   :parse-hash
+   :parse-hash-or-lose))
 (in-package :cl-bcrypt)

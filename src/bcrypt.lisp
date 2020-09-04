@@ -41,8 +41,12 @@
   '("2a" "2b")
   "Supported algorithm identifiers")
 
+(defparameter *bcrypt-hash-regex-scanner*
+  (cl-ppcre:create-scanner "^\\$(2[ab])\\$(\\d{2})\\$([a-zA-Z0-9\./]{22})([a-zA-Z0-9\./]{31})$")
+  "Regex used to match bcrypt hashes")
+
 (defparameter *default-cost-factor*
-  16
+  12
   "The default cost factor")
 
 (defconstant +raw-hash-size+
@@ -55,7 +59,7 @@
 
 (defconstant +encoded-hash-size+
   31
-  "Number of characters of the encoded password hash")
+  "Number of characters in the encoded password hash")
 
 (defconstant +raw-salt-size+
   16
@@ -64,10 +68,6 @@
 (defconstant +encoded-salt-size+
   22
   "Number of characters that represent an encoded salt")
-
-(defconstant +encoded-bcrypt-password-size+
-  60
-  "Number of characters that make up an encoded bcrypt password")
 
 (defconstant +max-plain-text-password-size+
   72
@@ -168,3 +168,18 @@ Supported IDENTIFIER values are 2a and 2b."
     (write-string (subseq salt-encoded 0 +encoded-salt-size+) stream)
     (write-string (subseq hash-encoded 0 +encoded-hash-size+) stream)
     (get-output-stream-string stream)))
+
+(defun parse-hash (hash-string)
+  "Parses an encoded bcrypt hash from the given HASH-STRING"
+  (cl-ppcre:register-groups-bind (identifier cost salt hash)
+      (*bcrypt-hash-regex-scanner* hash-string)
+    (list :algorithm-identifier identifier
+          :cost-factor cost
+          :salt salt
+          :password-hash hash)))
+
+(defun parse-hash-or-lose (hash-string)
+  (let ((parsed (parse-hash hash-string)))
+    (unless parsed
+      (error 'bcrypt-error :description "Invalid bcrypt hash"))
+    parsed))
