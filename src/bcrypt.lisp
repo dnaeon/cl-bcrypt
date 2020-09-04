@@ -73,7 +73,7 @@
   72
   "Maximum number of characters of a plain-text password")
 
-(define-condition bcrypt-error ()
+(define-condition bcrypt-error (simple-error)
   ((description
     :initarg :description
     :reader bcrypt-error-description))
