@@ -183,3 +183,16 @@ Supported IDENTIFIER values are 2a and 2b."
     (unless parsed
       (error 'bcrypt-error :description "Invalid bcrypt hash"))
     parsed))
+
+(defun decode (hash-string)
+  "Decodes the given HASH-STRING into a PASSWORD instance"
+  (let* ((parsed (parse-hash-or-lose hash-string))
+         (identifier (getf parsed :algorithm-identifier))
+         (cost-factor (parse-integer (getf parsed :cost-factor)))
+         (salt (b64-decode (getf parsed :salt)))
+         (password-hash (b64-decode (getf parsed :password-hash))))
+    (make-instance 'password
+                   :algorithm-identifier identifier
+                   :cost-factor cost-factor
+                   :salt salt
+                   :password-hash password-hash)))
