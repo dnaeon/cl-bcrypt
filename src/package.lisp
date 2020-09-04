@@ -39,7 +39,7 @@
    :salt
    :password-hash
    :bcrypt-error
-   :bcrypt-error-condition
+   :bcrypt-error-description
    :make-password
    :b64-encode
    :b64-decode
