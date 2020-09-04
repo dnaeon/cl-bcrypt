@@ -143,11 +143,17 @@ Supported IDENTIFIER values are 2a and 2b."
          (iterations (expt 2 cost))
          (kdf (ironclad:make-kdf :bcrypt))
          (key (ironclad:derive-key kdf passphrase salt iterations +raw-hash-size+)))
+    ;; See the comments in ENCODE function about why we truncate the
+    ;; raw hash (represented by KEY here) to +RAW-HASH-BYTES-TO-ENCODE+.
+    ;; In order to have the same number of bytes in the raw hash when
+    ;; decoding a password hash (using DECODE) and creating a new one
+    ;; when using MAKE-PASSWORD we are truncating it here to keep both
+    ;; byte sequences the same in terms of length and values.
     (make-instance 'password
                    :algorithm-identifier identifier
                    :cost-factor cost
                    :salt salt
-                   :password-hash key)))
+                   :password-hash (subseq key 0 +raw-hash-bytes-to-encode+))))
 
 (defun encode (password)
   "Encodes the given PASSWORD instance into its text representation"
