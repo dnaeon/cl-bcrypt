@@ -20,6 +20,5 @@
                :cl-ppcre)
   :components ((:module "core"
                 :pathname #P"src/"
-                :components ((:file "package")
-                             (:file "bcrypt" :depends-on ("package")))))
+                :components ((:file "bcrypt"))))
   :in-order-to ((test-op (test-op "cl-bcrypt.test"))))

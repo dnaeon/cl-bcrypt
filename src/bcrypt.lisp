@@ -23,6 +23,31 @@
 ;; (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 ;; THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+(in-package :cl-user)
+(defpackage :cl-bcrypt
+  (:use :cl)
+  (:nicknames :bcrypt)
+  (:import-from :binascii)
+  (:import-from :ironclad)
+  (:import-from :cl-ppcre)
+  (:export
+   :*default-cost-factor*
+   :generate-salt
+   :password
+   :algorithm-identifier
+   :cost-factor
+   :salt
+   :password-hash
+   :bcrypt-error
+   :bcrypt-error-description
+   :make-password
+   :b64-encode
+   :b64-decode
+   :encode
+   :parse-hash
+   :parse-hash-or-lose
+   :decode
+   :password=))
 (in-package :cl-bcrypt)
 
 (defparameter *alphabet*
