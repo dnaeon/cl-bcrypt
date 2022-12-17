@@ -10,17 +10,8 @@ jobs:
       QUICKLISP_DIST_VERSION: latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Run tests
         uses: docker://clfoundation/sbcl:2.2.4
-      - name: Run tests1
-        run: |
-          # Install Quicklisp
-          /usr/local/bin/install-quicklisp
-
-          # Configure ASDF to find our systems in $WORKSPACE
-          mkdir -p ~/.config/common-lisp/source-registry.conf.d/
-          echo "(:tree \"${WORKSPACE}\")" > ~/.config/common-lisp/source-registry.conf.d/workspace.conf
-
-          # Run the tests
-          make test
+        with:
+          args: /github/workspace/scripts/run-ci-tests.sh

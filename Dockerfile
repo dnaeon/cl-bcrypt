@@ -6,6 +6,8 @@ ENV QUICKLISP_DIST_VERSION=latest
 WORKDIR /app
 COPY . .
 
-RUN /usr/local/bin/install-quicklisp
+RUN mkdir -p ~/.config/common-lisp/source-registry.conf.d && \
+    echo '(:tree "/app/")' >  ~/.config/common-lisp/source-registry.conf.d/workspace.conf && \
+    /usr/local/bin/install-quicklisp
 
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["./scripts/run-tests.sh"]

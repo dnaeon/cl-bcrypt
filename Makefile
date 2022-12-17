@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := test
 
 test:
-	./run-tests.sh
+	./scripts/run-tests.sh
 
 .PHONY: test
