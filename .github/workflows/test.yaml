@@ -4,20 +4,22 @@ on: [ push, pull_request ]
 jobs:
   test:
     strategy:
+      fail-fast: true
       matrix:
         implementation:
           - clfoundation/sbcl:2.2.4
           - clfoundation/ecl:21.2.1
           - clfoundation/ccl:1.12
     runs-on: ubuntu-latest
-    env:
-      WORKSPACE: /github/workspace/
-      QUICKLISP_ADD_TO_INIT_FILE: true
-      QUICKLISP_DIST_VERSION: latest
+    container:
+      image: ${{ matrix.implementation }}
+      env:
+        CI_SYSTEM: github
+        QUICKLISP_ADD_TO_INIT_FILE: true
+        QUICKLISP_DIST_VERSION: latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
       - name: Run tests
-        uses: docker://${{ matrix.implementation }}
-        with:
-          args: /github/workspace/scripts/run-ci-tests.sh
+        run: |
+          ./scripts/run-ci-tests.sh
