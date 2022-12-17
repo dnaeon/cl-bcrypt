@@ -19,7 +19,7 @@ jobs:
             command: ecl
           - implementation: ccl
             image: clfoundation/ccl:1.12
-            command: ecl
+            command: ccl
     runs-on: ubuntu-latest
     container:
       image: ${{ matrix.image }}
