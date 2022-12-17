@@ -4,15 +4,25 @@ on: [ push, pull_request ]
 jobs:
   test:
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         implementation:
-          - clfoundation/sbcl:2.2.4
-          - clfoundation/ecl:21.2.1
-          - clfoundation/ccl:1.12
+          - sbcl
+          - ecl
+          - ccl
+        include:
+          - implementation: sbcl
+            image: clfoundation/sbcl:2.2.4
+            command: sbcl
+          - implementation: ecl
+            image: clfoundation/ecl:21.2.1
+            command: ecl
+          - implementation: ccl
+            image: clfoundation/ccl:1.12
+            command: ecl
     runs-on: ubuntu-latest
     container:
-      image: ${{ matrix.implementation }}
+      image: ${{ matrix.image }}
       env:
         CI_SYSTEM: github
         QUICKLISP_ADD_TO_INIT_FILE: true
@@ -22,4 +32,4 @@ jobs:
         uses: actions/checkout@v3
       - name: Run tests
         run: |
-          ./scripts/run-ci-tests.sh
+          env LISP=${{ matrix.command }} ./scripts/run-ci-tests.sh
