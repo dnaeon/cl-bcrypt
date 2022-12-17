@@ -3,6 +3,12 @@ name: test
 on: [ push, pull_request ]
 jobs:
   test:
+    strategy:
+      matrix:
+        implementation:
+          - clfoundation/sbcl:2.2.4
+          - clfoundation/ecl:21.2.1
+          - clfoundation/ccl:1.12
     runs-on: ubuntu-latest
     env:
       WORKSPACE: /github/workspace/
@@ -12,6 +18,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
       - name: Run tests
-        uses: docker://clfoundation/sbcl:2.2.4
+        uses: docker://${{ matrix.implementation }}
         with:
           args: /github/workspace/scripts/run-ci-tests.sh
