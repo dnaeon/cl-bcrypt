@@ -1,0 +1,25 @@
+# .github/workflows/test.yaml
+name: test
+on: [ push, pull_request ]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      WORKSPACE: /github/workspace/
+      QUICKLISP_ADD_TO_INIT_FILE: true
+      QUICKLISP_DIST_VERSION: latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Run tests
+        uses: docker://clfoundation/sbcl:2.2.4
+        run: |
+          # Install Quicklisp
+          /usr/local/bin/install-quicklisp
+
+          # Configure ASDF to find our systems in $WORKSPACE
+          mkdir -p ~/.config/common-lisp/source-registry.conf.d/
+          echo "(:tree \"${WORKSPACE}\")" > ~/.config/common-lisp/source-registry.conf.d/workspace.conf
+
+          # Run the tests
+          make test
