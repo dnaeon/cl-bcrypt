@@ -1,7 +1,8 @@
-FROM clfoundation/sbcl:2.2.4
+FROM clfoundation/ecl:21.2.1
 
 ENV QUICKLISP_ADD_TO_INIT_FILE=true
 ENV QUICKLISP_DIST_VERSION=latest
+ENV LISP=ecl
 
 WORKDIR /app
 COPY . .
